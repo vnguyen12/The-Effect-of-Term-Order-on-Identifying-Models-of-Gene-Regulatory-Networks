@@ -1,0 +1,48 @@
+R=ZZ/2[x1,x2,x3]
+a=toList(0..7);
+s=subsets(a,5);
+t=apply(3, i->{0,1,2,3,i+4});
+
+M=matrix {{1,0,0,0,0,0,0,0},{1,0,0,1,0,0,0,0},{1,0,1,0,0,0,0,0},{1,0,1,1,0,0,1,0},{1,1,0,0,0,0,0,0},{1,1,0,1,0,1,0,0},{1,1,1,0,1,0,0,0},{1,1,1,1,1,1,1,1}}
+
+M5 = flatten apply(s, l->apply(t, ll->(mm=(M^l)_ll;mm=>{"Rows"=>l,"Columns"=>ll,"Rank"=>rank mm})));
+N5 = apply(M5, p->{last (last p)_2,last last (last p)_1,last (last p)_0})
+N5 = sort N5;
+-- elements of N5 are lists {rank, col# in 0-7 format, row list}
+
+
+
+
+
+N5/print;
+oo/print;
+select(N5, l->last l == {0,1,2,3,4})
+
+
+m={1,x1,x2,x3,x1*x2,x1*x3,x2*x3,x1*x2*x3}
+d=flatten flatten apply(2, i->apply(2, j->apply(2, k->(i,j,k))))
+M5 = flatten apply(s, l->apply(s, ll->(M^l)_ll))
+M5 = flatten apply(s, l->apply(s, ll->{(M^l)_ll,l,ll,rank (M^l)_ll}))
+
+--we lost some elements
+H = new HashTable from M5;
+
+
+#select(values H, l->last l_2 == 5)
+
+H1 = apply(values H, l->{l_0,"Column"=>last last l_1,l_2})
+
+select(apply(values H, l->{last last l_1,last l_2}),p->last p == 5)
+
+H2 = apply(H1, l->{l_2,l_1,l_0})
+k=unique apply(H2, l->first l);
+c=unique apply(H2, l->l_1);
+
+H3 = apply(H2, l->{last l_0,last l_1,last l_2});
+H3 = sort H3;
+
+
+J = new MutableHashTable;
+
+apply(k, e->J#e={})
+ 
